@@ -1,0 +1,32 @@
+/* * {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+.footer {
+  color: white;
+  background-color: black;
+  margin-top: 50px;
+}
+
+#navbar {
+  width: 100%;
+  padding: 8px 0px;
+}
+#navbar ul {
+  display: flex;
+}
+#navbar nav ul li {
+  font-size: 30px;
+  padding: 0 8px;
+  margin-right: 8px;
+  list-style: none;
+}
+#navbar nav ul li a {
+  text-decoration: none;
+} */
+#serviceData h1{
+    color:white;
+    background-color: black;
+
+}
