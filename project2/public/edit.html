@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href=" edit.css">
+</head>
+<body>
+      
+     
+        <div  id="edit_container">
+            <h1 id="idtext">this is your edit file</h1>
+            <form  method="POST" action="/edit">
+            <input type="text" value={id}  name="valueId" hidden/>
+            <input type="text" placeholder="enter the  edit data" value={value} name="action">
+            <br/>
+            <button type="submit">add</button>
+           </form>
+        </div>
+       
+      
+</body>
+</html>

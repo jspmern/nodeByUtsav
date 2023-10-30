@@ -1,0 +1,12 @@
+#edit_container
+{
+   display: flex;
+   height: 100vh;
+   width: 100%;
+   justify-content: center;
+   align-items: center;
+}
+#idtext
+{
+  text-align: center;
+}

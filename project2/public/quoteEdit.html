@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .align_div{
+              height: 40vh;
+              width: 100%;
+        }
+    </style>
+</head>
+<body>
+       <div class="container align_div">
+        <div class="row d-flex justify-content-center">
+            <div class="col">
+                <h1>Welcome to Edit page</h1>
+                <form action="/editquote" method="POST">
+                <input type="text" name="editId" value="{editId}"/>
+                <input type="text" placeholder="Enter your here updated text"   value="{editText}" name="editText" />
+                <button class="btn btn-primary">edit</button>
+            </form>
+            </div>
+        </div>
+       </div> 
+</body>
+</html>
