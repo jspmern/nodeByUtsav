@@ -74,6 +74,7 @@
         formData.append("text", username);
         formData.append("password", password);
         formData.append("image", image);
+        
 
         fetch("/registor", {
           method: "POST",
@@ -88,6 +89,7 @@
           })
           .then((message) => {
             document.getElementById("status").innerText = message;
+            location.href="/login"
           })
           .catch((error) => {
             document.getElementById("status").innerText =

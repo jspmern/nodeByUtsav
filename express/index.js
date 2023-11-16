@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 let multer = require("multer");
 //this is inbuild middlware for serving  public file
 app.use(express.static(path.join("public")));
+app.use(express.static(path.join("image")));
 //this is the middlware for the reading data in console in express libraray
 app.use(bodyParser.json());
 //this is for the path of db
@@ -75,27 +76,17 @@ app.get("/registor", (req, res) => {
   res.sendFile(path.join(__dirname, "public/registorion.html"));
 });
 
-// app.post('/registor',upload.single('image'),(req,res)=>{
-//   if (!req.file) {
-//     return res.status(400).send('No file uploaded.');
-// }
-//   console.log('hii ii am post')
-//   console.log(req.file)
-//   res.send('sucessfully added')
-// })
 app.post("/registor", upload.single("image"), (req, res) => {
-  console.log(req.body);
-  console.log(req.file.path);
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
   let { fullName, text, password } = req.body;
   let newData = {
-    id: new Date().getMilliseconds(),
+    id: Date.now(),
     text: text,
     fullName: fullName,
     pass: password,
-    img: req.file.path,
+    img: req.file.filename,
   };
   //read file
   fs.readFile(db, "utf-8", (err, data) => {
@@ -122,18 +113,105 @@ app.post("/registor", upload.single("image"), (req, res) => {
     }
   });
 });
-app.get('/allUser',(req,res)=>{
-   fs.readFile(db,'utf-8',(err,data)=>{
-    if(err)
-    {
-      res.send('somthing werong while reading')
+app.get("/allUser", (req, res) => {
+  fs.readFile(db, "utf-8", (err, data) => {
+    if (err) {
+      res.send("somthing werong while reading");
+    } else {
+      let originalData = JSON.parse(data);
+      res.send(originalData);
     }
-    else{
-      let  originalData=JSON.parse(data)
-      res.send(originalData)
+  });
+});
+//this is for the delete action
+app.delete("/singleUserDelete/:id", (req, res) => {
+  fs.readFile(db, "utf-8", (err, data) => {
+    if (err) {
+      res.send("somthing wrong while reading the data");
+    } else {
+      let orignalData = JSON.parse(data);
+      let delteData = orignalData.filter((item) => {
+        return item.id != req.params.id;
+      });
+      fs.writeFile(db, JSON.stringify(delteData), (err) => {
+        if (err) {
+          res.send("while reading the data i am facing the error");
+        } else {
+          res.json({ delete: true });
+        }
+      });
     }
-   })
-})
+  });
+});
+
+//this for the update user
+app.put("/updateUser", upload.single("image"), (req, res) => {
+  let { id, text, fullName, pass } = req.body;
+  fs.readFile(db, "utf-8", (err, data) => {
+    if (err) {
+      res.send("somthing error while reading the db");
+    } else {
+      let orignalData = JSON.parse(data);
+      let updataData = orignalData.map((item) => {
+        if (item.id == id) {
+          return {
+            ...item,
+            id,
+            text,
+            fullName,
+            img: req.file ? req.file.filename : item.img,
+            pass,
+          };
+        } else {
+          return item;
+        }
+      });
+      fs.writeFile(db,JSON.stringify(updataData),(err)=>{
+        if(err)
+        {
+          res.send({update:false})
+        }
+        else{
+          res.json({update:true})
+        }
+      })
+    }
+  });
+});
+
+app.get("/editUserTemp/:id", (req, res) => {
+  let id = req.params.id;
+  let templatePath = path.join(__dirname, "public/edit.html");
+  fs.readFile(db, "utf-8", (err, data) => {
+    if (err) {
+      res.send("somthing error while reding the data");
+    } else {
+      let orignalData = JSON.parse(data);
+      let findData = orignalData.find((item) => {
+        return item.id == id;
+      });
+      if (findData) {
+        fs.readFile(templatePath, "utf-8", (err, data) => {
+          if (err) {
+            res.send("somthing error while reding the template");
+          } else {
+            const modifiedHtml = data
+              .replace("{{id}}", findData.id)
+              .replace("{{fullName}}", findData.fullName)
+              .replace("{{text}}", findData.text)
+              .replace("{{pass}}", findData.pass)
+              .replace("{{img}}", findData.img)
+              .replace("{{imgs}}", findData.img);
+            res.send(modifiedHtml);
+          }
+        });
+      } else {
+        res.send("data is not available");
+      }
+    }
+  });
+});
+
 app.get("*", (req, res) => {
   res.send("link is not found");
 });

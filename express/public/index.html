@@ -14,7 +14,7 @@
   <body>
     <div class="container bg-dark" style="height: 100vh; width: 100%">
       <div class="row">
-        <div class="col   justify-content-center align-items-center">
+        <div class="col justify-content-center align-items-center">
           <!-- //this is for the navbar -->
           <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -27,7 +27,15 @@
                   <a class="nav-link" href="/about">About</a>
                   <a class="nav-link" href="/service">Service</a>
                   <a class="nav-link" href="/login" id="action">LOGIN</a>
-                  <button class="btn btn-primary" style="border: none; background-color:white ; color:  black;" id="logout" onclick="logoutHandler()">Logout</button>
+                  <button
+                    class="btn btn-primary"
+                    style="border: none; background-color: white; color: black"
+                    id="logout"
+                    onclick="logoutHandler()"
+                  >
+                    Logout
+                  </button>
+                  <button class="btn btn-primary" style="border: none; background-color:white ; color:  black;" id="user" onclick="getALLUser()">ALLUSER</button>
                 </div>
               </div>
             </div>
@@ -37,32 +45,47 @@
           <br />
           <hr />
           <h1 class="text-white">hello i am index page</h1>
-          <br/>
+          <br />
           <form method="GET" action="/download">
             <button class="btn btn-info">download</button>
           </form>
-   
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
     <script>
-        function logoutHandler()
-      {
-        localStorage.removeItem('isLogin')
-         location.reload()
+        function getALLUser(){
+        location.href="AllUser.html"
       }
-      let loginOrNot=''
-   function checkLogiorNot()
-   {
-       let x=localStorage.getItem('isLogin') ?JSON.parse(localStorage.getItem('isLogin')):false
-       loginOrNot=x.login
-   }
-   checkLogiorNot()
-   let action=document.getElementById('action')
-   let  logout=document.getElementById('logout')
-   loginOrNot?action.style.display="none":logout.style.display='block'
-      loginOrNot?logout.style.display="block":logout.style.display='none'
- </script>
+      function logoutHandler() {
+        localStorage.removeItem("isLogin");
+        location.reload();
+      }
+      let loginOrNot = "";
+      function checkLogiorNot() {
+        let x = localStorage.getItem("isLogin")
+          ? JSON.parse(localStorage.getItem("isLogin"))
+          : false;
+        loginOrNot = x.login;
+      }
+      checkLogiorNot();
+      let action = document.getElementById("action");
+      let logout = document.getElementById("logout");
+      let user = document.getElementById("user");
+
+      loginOrNot
+        ? (action.style.display = "none")
+        : (logout.style.display = "block");
+      loginOrNot
+        ? (logout.style.display = "block")
+        : (logout.style.display = "none");
+      loginOrNot
+        ? (user.style.display = "block")
+        : (user.style.display = "none");
+    </script>
   </body>
 </html>

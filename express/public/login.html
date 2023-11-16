@@ -27,8 +27,10 @@
                   <a class="nav-link" href="/about">About</a>
                   <a class="nav-link" href="/service">Service</a>
                   <a class="nav-link" href="/login" id="action">LOGIN</a>
-                  <button class="btn btn-primary" style="border: none; background-color:white ; color:  black;" id="logout" onclick="logoutHandler()">Logout</button>
-                </div>
+                  
+                <button class="btn btn-primary" style="border: none; background-color:white ; color:  black;" id="logout" onclick="logoutHandler()">Logout</button>
+                <button class="btn btn-primary" style="border: none; background-color:white ; color:  black;" id="user" onclick="getALLUser()">ALLUSER</button> 
+              </div>
               </div>
             </div>
           </nav>
@@ -62,6 +64,9 @@
       </div>
     </div>
     <script>
+        function getALLUser(){
+        location.href="AllUser.html"
+      }
         function logoutHandler()
       {
         localStorage.removeItem('isLogin')
@@ -78,9 +83,12 @@
       }
       checkLogiorNot()
       let action=document.getElementById('action')
-   let  logout=document.getElementById('logout')
-   loginOrNot?action.style.display="none":logout.style.display='block'
+      let  logout=document.getElementById('logout')
+      let  user=document.getElementById('user')
+  
+     loginOrNot?action.style.display="none":logout.style.display='block'
       loginOrNot?logout.style.display="block":logout.style.display='none'
+      loginOrNot?user.style.display="block":user.style.display='none'
       btn.addEventListener("click", (e) => {
         let text = document.getElementById("text");
         let pass = document.getElementById("pass");
