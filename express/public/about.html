@@ -43,6 +43,7 @@
                   >
                     ALLUSER
                   </button>
+                  <button class="btn btn-primary" style="border: none; background-color:white ; color:  black;" id="product" onclick="getALLProduct()">product</button>
                 </div>
               </div>
             </div>
@@ -61,35 +62,39 @@
       crossorigin="anonymous"
     ></script>
     <script>
-        function getALLUser(){
+       function getALLUser(){
         location.href="AllUser.html"
       }
-      
-      function logoutHandler() {
-        localStorage.removeItem("isLogin");
-        location.reload();
+      function getALLProduct()
+      {
+        location.href="/product"
       }
-      let loginOrNot = "";
-      function checkLogiorNot() {
-        let x = localStorage.getItem("isLogin")
-          ? JSON.parse(localStorage.getItem("isLogin"))
-          : false;
-        loginOrNot = x.login;
+         function logoutHandler()
+      {
+        localStorage.removeItem('isLogin')
+         location.reload()
       }
-      checkLogiorNot();
-      let action = document.getElementById("action");
-      let logout = document.getElementById("logout");
-      let user = document.getElementById("user");
-
+     
+             let loginOrNot=''
+             let isAdminLogin=""
+      function checkLogiorNot()
+      {
+          let x=localStorage.getItem('isLogin') ?JSON.parse(localStorage.getItem('isLogin')):false
+          loginOrNot=x.login
+          isAdminLogin=x.admin
+      }
+      checkLogiorNot()
+      let action=document.getElementById('action')
+      let  logout=document.getElementById('logout')
+      let  user=document.getElementById('user')
+      let product=document.getElementById('product')
+   
+     loginOrNot?action.style.display="none":logout.style.display='block'
+      loginOrNot?logout.style.display="block":logout.style.display='none'
+      isAdminLogin&&loginOrNot?user.style.display="block":user.style.display='none'
       loginOrNot
-        ? (action.style.display = "none")
-        : (logout.style.display = "block");
-      loginOrNot
-        ? (logout.style.display = "block")
-        : (logout.style.display = "none");
-      loginOrNot
-        ? (user.style.display = "block")
-        : (user.style.display = "none");
+        ? (product.style.display = "block")
+        : (product.style.display = "none");
     </script>
   </body>
 </html>

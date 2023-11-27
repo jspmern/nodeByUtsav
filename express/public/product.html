@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+              <a class="nav-link" href="/about">About</a>
+              <a class="nav-link" href="/service">Service</a>
+              <a class="nav-link" href="/login" id="action">LOGIN</a>
+              <button
+                class="btn btn-primary"
+                style="border: none; background-color: white; color: black"
+                id="logout"
+                onclick="logoutHandler()"
+              >
+                Logout
+              </button>
+              <button
+                class="btn btn-primary"
+                style="border: none; background-color: white; color: black"
+                id="user"
+                onclick="getALLUser()"
+              >
+                ALLUSER
+              </button>
+              <button
+                class="btn btn-primary"
+                style="border: none; background-color: white; color: black"
+                id="product"
+                onclick="getALLProduct()"
+              >
+                product
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <br />
+      <br />
+
+      <div class="row d-flex justify-content-center">
+        <div class="col-3">
+          <input
+            type
+            id="serach"
+            placeholder="serch your item"
+            onkeypress="searching(event)"
+          />
+          <select onclick="sorting(event)">
+            <option value="A_Z">A_Z</option>
+            <option value="Z_A">Z_A</option>
+            <option value="lowest">1_10</option>
+            <option value="highest">10_1</option>
+          </select> 
+          <button class="btn btn-danger" id="clear">clearALLFilter</button>
+          <br />
+          <hr />
+          Advance Filter
+          <hr />
+          <h3>Catergory</h3>
+          <br />
+          <div id="cat"></div>
+          <br />
+          <br />
+          brand
+          <br />
+          <br />
+        </div>
+        <div class="col-md-9">
+          <div
+            class="row d-flex justify-content-center align-items-center gap-2"
+            id="body"
+          ></div>
+        </div>
+      </div>
+      <!-- this is for the pagiganation -->
+      <br />
+      <br />
+      <div class="row justify-content-center align-items-center">
+        <div class="col">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination" id="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      //globally i have to call the function
+      fetchData();
+
+      function crateQueryString() {
+        let str = "";
+        let keys = Object.keys(globalParms);
+
+        for (let i = 0; i < keys.length; i++) {
+          str = str + `${keys[i]}=${globalParms[keys[i]]}`;
+
+          // Add '&' only if there are more properties
+          if (i < keys.length - 1) {
+            str = str + "&";
+          }
+        }
+
+        str = `http://localhost:8000/allproduct?${str}`;
+        return str;
+      }
+      //this is for the sorting
+      function sorting(e) {
+        globalParms = { ...globalParms, sort: e.target.value };
+        fetchData(crateQueryString());
+      }
+      //this is for the function searching
+      let debounceTimer;
+      function searching(e) {
+        // Clear the previous debounce timer
+        clearTimeout(debounceTimer);
+        // Set up a new debounce timer
+        debounceTimer = setTimeout(() => {
+          // Your debounced code goes here
+          globalParms = { ...globalParms, text: e.target.value };
+          console.log(globalParms);
+          fetchData(crateQueryString());
+        }, 300); // Adjust the debounce delay as needed (e.g., 300 milliseconds)
+      }
+
+      function getALLUser() {
+        location.href = "/AllUser.html";
+      }
+
+      function logoutHandler() {
+        localStorage.removeItem("isLogin");
+        location.reload();
+      }
+      let loginOrNot = "";
+      let isAdminLogin=""
+      function checkLogiorNot() {
+        let x = localStorage.getItem("isLogin")
+          ? JSON.parse(localStorage.getItem("isLogin"))
+          : false;
+        loginOrNot = x.login;
+        isAdminLogin=x.admin
+      }
+      checkLogiorNot();
+      let action = document.getElementById("action");
+      let logout = document.getElementById("logout");
+      let user = document.getElementById("user");
+      let product = document.getElementById("product");
+      loginOrNot
+        ? (action.style.display = "none")
+        : (logout.style.display = "block");
+      loginOrNot
+        ? (logout.style.display = "block")
+        : (logout.style.display = "none");
+      loginOrNot && isAdminLogin
+        ? (user.style.display = "block")
+        : (user.style.display = "none");
+      loginOrNot
+        ? (product.style.display = "block")
+        : (product.style.display = "none");
+
+      //this is the page logic
+      let gArr = [];
+      let cat = [];
+      let clear =document.getElementById('clear')
+      let body = document.getElementById("body");
+      let catDiv = document.getElementById("cat");
+      //this is the for the clear all the filter
+      clear.addEventListener('click',()=>{
+        globalParms = {
+        text: "",
+        limit: 0,
+        skip: 0,
+        cat: "",
+        sort: "lowest",
+      };
+      fetchData(crateQueryString());
+      })
+      //this is the fetch for getting category
+      function categoriesPrint() {
+        let categoryTemp = "";
+        cat.map((item) => {
+          categoryTemp += `<button style="background-color: white; border: none;" value=${item} onclick="getValueOfCat(event)">${item}</button> <br/> <hr/>`;
+        });
+        catDiv.innerHTML = categoryTemp;
+      }
+      fetch("https://dummyjson.com/products/categories")
+        .then((item) => {
+          return item.json();
+        })
+        .then((item) => {
+          cat = item;
+          categoriesPrint();
+        });
+      //this is become funtion for fetching data
+      function fetchData(arg) {
+        let url = arg ? arg : "/allproduct";
+        fetch(url)
+          .then((item) => {
+            return item.json();
+          })
+          .then((data) => {
+            gArr = data;
+            print();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      //this is globally objfor crating parms
+      let globalParms = {
+        text: "",
+        limit: 0,
+        skip: 0,
+        cat: "",
+        sort: "lowest",
+      };
+      //this is for the getValueof Category
+      function getValueOfCat(e) {
+        let x = e.target.value;
+        globalParms = { ...globalParms, cat: x };
+        fetchData(crateQueryString());
+      }
+
+      function print() {
+        let str = "";
+        if (loginOrNot) {
+          gArr.map((item) => {
+            str =
+              str +
+              `  <div class="col-md-3">
+            
+                <div class="card">
+                    <div class="card-header">
+                        <p>${item.brand}</p>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <img src= ${item.images[0]} class="img-fluid" style="height: 200px; width: 250px;"  />
+                            <p>productName:${item.brand}</p>
+                            <p>stock:${item.stock}</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <p>price:${item.price}</p>
+                        <hr/>
+                        <p>rating:${item.rating}</p>
+                    </div>
+                </div>
+            </div>
+          </div>`;
+          });
+          body.innerHTML = str;
+        } else {
+          location.href = "/login";
+        }
+      }
+      function getALLUser() {
+        location.href = "/AllUser.html";
+      }
+      //this code for pagigation
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the pagination element
+        var pagination = document.getElementById("pagination");
+
+        // Add a click event listener to the pagination element
+        pagination.addEventListener("click", function (event) {
+          // Check if the clicked element is a page link
+          if (
+            event.target.tagName === "A" &&
+            event.target.classList.contains("page-link")
+          ) {
+            // Get the page number from the clicked link
+            var pageNumber = event.target.textContent;
+            // Log the page number to the console
+            pageNumber == 1
+              ? (globalParms = { ...globalParms, limit: 9 })
+              : pageNumber == 2
+              ? (globalParms = { ...globalParms, limit: 9, skip: 9 })
+              : (globalParms = { ...globalParms, limit: 9, skip: 18 });
+            console.log(globalParms);
+            fetchData(crateQueryString());
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

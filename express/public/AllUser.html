@@ -43,6 +43,14 @@
                   >
                     ALLUSER
                   </button>
+                  <button
+                    class="btn btn-primary"
+                    style="border: none; background-color: white; color: black"
+                    id="product"
+                    onclick="getALLProduct()"
+                  >
+                    product
+                  </button>
                 </div>
               </div>
             </div>
@@ -73,17 +81,20 @@
       crossorigin="anonymous"
     ></script>
     <script>
-       let loginOrNot = "";
+      let loginOrNot = "";
+      let isAdminLogin=""
       function checkLogiorNot() {
         let x = localStorage.getItem("isLogin")
           ? JSON.parse(localStorage.getItem("isLogin"))
           : false;
         loginOrNot = x.login;
+         isAdminLogin=x.admin
       }
       checkLogiorNot();
       let action = document.getElementById("action");
       let logout = document.getElementById("logout");
       let user = document.getElementById("user");
+      let product = document.getElementById("product");
 
       loginOrNot
         ? (action.style.display = "none")
@@ -94,6 +105,9 @@
       loginOrNot
         ? (user.style.display = "block")
         : (user.style.display = "none");
+      loginOrNot
+        ? (product.style.display = "block")
+        : (product.style.display = "none");
       let globarArr = [];
       let str = "";
       //this is for the body reference
@@ -118,12 +132,11 @@
       fetData();
       //the is for printing
       function print() {
-        if(loginOrNot)
-        {
+        if (loginOrNot && isAdminLogin) {
           let len = globarArr.length;
-        if (len > 0) {
-          globarArr.map((data) => {
-            str += ` <tr>
+          if (len > 0) {
+            globarArr.map((data) => {
+              str += ` <tr>
                 <th scope="row">${data.id}</th>
                 <td>${data.fullName}</td>
                 <td>${data.text}</td>     
@@ -136,48 +149,52 @@
                             <div class="col-md-3"><button class="btn btn-primary" onclick="editHandler(${data.id})">edit</button></div>
                             <div class="col-md-3"><button class="btn btn-danger" onclick="deleteHandler(${data.id})">delete</button></div>
                           </form>
+
                         </div>
+                        
                     </div>
                 </td>
+                  ${data.role === "admin" ? `<td><button onclick="moreDeatils(${data.id})" >more</button></td>` : ''}
             </tr>`;
-          });
+            });
+          } else {
+            str = "data is loading";
+          }
+          body.innerHTML = str;
         } else {
-          str = "data is loading";
+          location.href = "/login";
         }
-        body.innerHTML = str;
-        }
-        else{
-          location.href="/login"
-        }
-       
       }
+      function getALLProduct() {
+        location.href = "/product";
+      }
+
       //function editHandler
-      function editHandler(id)
-      {
-        window.location.href = '/editUserTemp/'+id
+      function editHandler(id) {
+        window.location.href = "/editUserTemp/" + id;
       }
 
       //function delteHandler
-      function deleteHandler(id)
-      {
-           let url=`http://localhost:8000/singleUserDelete/${id}`
-           let requestMethod={
-            method:"DELETE",
-            headers:{"Content-Type":"application/json"}
-           }
-           fetch(url,requestMethod).then((item)=>{
-            return item.json()
-           }).then((data)=>{
-               if(data.delete)
-               {
-                location.reload()
-               }
-               else{
-                console.log('not sucessfully delete')
-               }
-           }).catch((err)=>{
-            console.log('err is ',err)
-           })
+      function deleteHandler(id) {
+        let url = `http://localhost:8000/singleUserDelete/${id}`;
+        let requestMethod = {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        };
+        fetch(url, requestMethod)
+          .then((item) => {
+            return item.json();
+          })
+          .then((data) => {
+            if (data.delete) {
+              location.reload();
+            } else {
+              console.log("not sucessfully delete");
+            }
+          })
+          .catch((err) => {
+            console.log("err is ", err);
+          });
       }
       function copyToClipboard() {
         // Create a temporary textarea element
@@ -204,7 +221,13 @@
         location.href = "login.html";
       }
 
-     
+      //this is for the handling the  more click from the admin
+        function moreDeatils(id)
+        {
+           window.location.href=`/moreuser/${id}`
+        }
+
+
     </script>
   </body>
 </html>

@@ -416,7 +416,7 @@ server.on("request", (req, res) => {
                   res.end("somthing wrong while writing the data");
                 } else {
                   //res.writeHead(302, { Location: "/quote" });
-                  res.end('work done');
+                  res.end("work done");
                 }
               });
             }
@@ -494,19 +494,16 @@ server.on("request", (req, res) => {
                     };
                   }
                 });
-                 fs.writeFile(dbPath,JSON.stringify(updateData),(err)=>{
-                   if(err)
-                   {
-                    res.writeHead(404,{"Content-Type":"text/plain"})
-                    res.end('somthing problem while writing')
-                   }
-                   else{
-                    console.log('hello utsav')
-                        res.writeHead(302,{Location:"/quote"})
-                        res.end()
-                   }
-                 })
-                
+                fs.writeFile(dbPath, JSON.stringify(updateData), (err) => {
+                  if (err) {
+                    res.writeHead(404, { "Content-Type": "text/plain" });
+                    res.end("somthing problem while writing");
+                  } else {
+                    console.log("hello utsav");
+                    res.writeHead(302, { Location: "/quote" });
+                    res.end();
+                  }
+                });
               }
             });
           }

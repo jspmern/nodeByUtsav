@@ -43,6 +43,7 @@
                   >
                     ALLUSER
                   </button>
+                  <button class="btn btn-primary" style="border: none; background-color:white ; color:  black;" id="product" onclick="getALLProduct()">product</button>
                 </div>
               </div>
             </div>
@@ -73,6 +74,7 @@
                     placeholder="Enter the fullName"
                     value="{{fullName}}"
                   />
+                 
                   <br />
                   <br />
                   <input
@@ -82,6 +84,7 @@
                     placeholder="enter your username"
                     value="{{text}}"
                   />
+                  <div id="error" class="text-danger"> </div>
                   <br />
                   <br />
                   <input
@@ -126,7 +129,6 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      console.log(window.serverData);
       function getALLUser() {
         location.href = "/AllUser.html";
       }
@@ -136,16 +138,19 @@
         location.reload();
       }
       let loginOrNot = "";
+      let isAdminLogin=""
       function checkLogiorNot() {
         let x = localStorage.getItem("isLogin")
           ? JSON.parse(localStorage.getItem("isLogin"))
           : false;
         loginOrNot = x.login;
+        isAdminLogin=x.admin
       }
       checkLogiorNot();
       let action = document.getElementById("action");
       let logout = document.getElementById("logout");
       let user = document.getElementById("user");
+      let product=document.getElementById('product')
 
       loginOrNot
         ? (action.style.display = "none")
@@ -153,9 +158,12 @@
       loginOrNot
         ? (logout.style.display = "block")
         : (logout.style.display = "none");
-      loginOrNot
+      loginOrNot && isAdminLogin
         ? (user.style.display = "block")
         : (user.style.display = "none");
+        loginOrNot
+        ? (product.style.display = "block")
+        : (product.style.display = "none");
 
       //this is the logic for the edit upadate
       let btn = document.getElementById("btn");
@@ -187,6 +195,12 @@
               pass = "";
               fullName = "";
               location.href = "http://localhost:8000/AllUser.html";
+            }
+            if(item.msg)
+            {
+                let error=document.getElementById('error')
+                error.innerText=item.msg
+                error.style.color="red"
             }
           })
           .catch((err) => {
